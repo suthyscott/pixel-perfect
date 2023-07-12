@@ -13,6 +13,7 @@ app.use(cors())
 const {User} = require('./models/user')
 const {Phone} = require('./models/phone')
 const {SavedPhone} = require('./models/savedPhone')
+const {seedDatabase} = require('./util/seed')
 
 User.hasMany(SavedPhone)
 SavedPhone.belongsTo(User)
@@ -21,8 +22,9 @@ Phone.hasMany(SavedPhone)
 SavedPhone.belongsTo(Phone)
 
 
-sequelize.sync()
-    .then(() => {
-        app.listen(PORT, () => console.log(`Take us to warp ${PORT}!`))
-    })
-    .catch(err => console.log(err))
+sequelize.sync({force: true}).then(() => seedDatabase())
+// sequelize.sync()
+    // .then(() => {
+    //     app.listen(PORT, () => console.log(`Take us to warp ${PORT}!`))
+    // })
+    // .catch(err => console.log(err))
