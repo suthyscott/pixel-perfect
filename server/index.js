@@ -15,16 +15,22 @@ const {Phone} = require('./models/phone')
 const {SavedPhone} = require('./models/savedPhone')
 const {seedDatabase} = require('./util/seed')
 
+const {register, login} = require('./controller/userCtrl')
+
 User.hasMany(SavedPhone)
 SavedPhone.belongsTo(User)
 
 Phone.hasMany(SavedPhone)
 SavedPhone.belongsTo(Phone)
 
+// Auth endpoints
+app.post('/api/register', register)
+app.post('/api/login', login)
 
-sequelize.sync({force: true}).then(() => seedDatabase())
-// sequelize.sync()
-    // .then(() => {
-    //     app.listen(PORT, () => console.log(`Take us to warp ${PORT}!`))
-    // })
-    // .catch(err => console.log(err))
+
+// sequelize.sync({force: true}).then(() => seedDatabase())
+sequelize.sync()
+    .then(() => {
+        app.listen(PORT, () => console.log(`Take us to warp ${PORT}!`))
+    })
+    .catch(err => console.log(err))
