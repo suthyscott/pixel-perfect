@@ -41,7 +41,35 @@ module.exports = {
             res.status(500).send('Something went wrong while registering')
         }
     },
-    login: (req, res) => {
-        console.log('login')
+    login: async (req, res) => {
+       try {
+        const {username, password} = req.body
+
+        const foundUser = await User.findOne({where: {username}})
+
+        if(foundUser){
+            const isAuthenticated = bcrypt.compareSync(password, foundUser.hashedPass)
+
+            if(isAuthenticated){
+                const token = createToken(foundUser.username, foundUser.id)
+                const exp = Date.now() + 1000 * 60 * 60 * 48
+
+                res.status(200).send({
+                    username: foundUser.username,
+                    userId: foundUser.id,
+                    token,
+                    exp
+                })
+            } else {
+                res.status(400).send('That password is incorrect')
+            }
+        } else {
+            res.status(400).send('There is no user with that username in the database')
+        }
+
+       } catch(err){
+        console.log(err)
+        res.status(500).send("something went wrong with login")
+       }
     }
 }
