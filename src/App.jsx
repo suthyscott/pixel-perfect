@@ -15,7 +15,7 @@ function App() {
         <Route path='/myphones' element={<MyPhones/>}/>
         <Route path='/allphones' element={<AllPhones/>}/>
       </Routes>
-     
+     pretend that I added the quiz
     </div>
   );
 }
